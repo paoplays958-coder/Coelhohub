@@ -1,4 +1,4 @@
--- Dragon Hub 0.2 - Brookhaven Edition
+-- Dragon Hub 0.2 - Brookhaven Edition - CÓDIGO COMPLETO
 -- Compatível com PC e Mobile
 
 local Players = game:GetService("Players")
@@ -15,8 +15,8 @@ local rootPart = character:WaitForChild("HumanoidRootPart")
 -- Detectar se está em Mobile
 local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
 
--- LOGO DO DRAGON HUB
-local DRAGON_HUB_LOGO = "rbxassetid://YOUR_IMAGE_ID_HERE" -- Cole sua imagem aqui no Roblox e pegue o ID
+-- LOGO DO DRAGON HUB (SUBSTITUA PELO ID DA SUA IMAGEM)
+local DRAGON_HUB_LOGO = "rbxassetid://18751483361" -- Cole o ID da sua imagem aqui
 
 -- Variáveis de controle
 local flyEnabled = false
@@ -46,26 +46,23 @@ local function showWelcomeNotification()
     screenGui.DisplayOrder = 9999
     screenGui.Parent = player.PlayerGui
     
-    -- Frame principal da notificação
     local notificationFrame = Instance.new("Frame")
     notificationFrame.Name = "NotificationFrame"
     notificationFrame.Size = UDim2.new(0, 300, 0, 80)
-    notificationFrame.Position = UDim2.new(1, 300, 1, -100) -- Começa fora da tela à direita
+    notificationFrame.Position = UDim2.new(1, 300, 1, -100)
     notificationFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
     notificationFrame.BorderSizePixel = 0
     notificationFrame.Parent = screenGui
     
-    -- Corner arredondado
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 12)
     corner.Parent = notificationFrame
     
-    -- Borda colorida (vermelha para combinar com o logo)
     local border = Instance.new("Frame")
     border.Name = "Border"
     border.Size = UDim2.new(1, 0, 0, 4)
     border.Position = UDim2.new(0, 0, 0, 0)
-    border.BackgroundColor3 = Color3.fromRGB(220, 50, 50) -- Vermelho como o logo
+    border.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
     border.BorderSizePixel = 0
     border.Parent = notificationFrame
     
@@ -73,7 +70,6 @@ local function showWelcomeNotification()
     borderCorner.CornerRadius = UDim.new(0, 12)
     borderCorner.Parent = border
     
-    -- Logo do Dragon Hub (sua imagem)
     local icon = Instance.new("ImageLabel")
     icon.Name = "Icon"
     icon.Size = UDim2.new(0, 50, 0, 50)
@@ -83,7 +79,6 @@ local function showWelcomeNotification()
     icon.ScaleType = Enum.ScaleType.Fit
     icon.Parent = notificationFrame
     
-    -- Título
     local title = Instance.new("TextLabel")
     title.Name = "Title"
     title.Size = UDim2.new(1, -75, 0, 25)
@@ -96,7 +91,6 @@ local function showWelcomeNotification()
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.Parent = notificationFrame
     
-    -- Mensagem
     local message = Instance.new("TextLabel")
     message.Name = "Message"
     message.Size = UDim2.new(1, -75, 0, 20)
@@ -109,7 +103,6 @@ local function showWelcomeNotification()
     message.TextXAlignment = Enum.TextXAlignment.Left
     message.Parent = notificationFrame
     
-    -- Sombra (efeito visual)
     local shadow = Instance.new("ImageLabel")
     shadow.Name = "Shadow"
     shadow.BackgroundTransparency = 1
@@ -123,41 +116,17 @@ local function showWelcomeNotification()
     shadow.SliceCenter = Rect.new(49, 49, 450, 450)
     shadow.Parent = notificationFrame
     
-    -- Animação de entrada (deslizar da direita)
-    local tweenInfo = TweenInfo.new(
-        0.5, -- Duração
-        Enum.EasingStyle.Back,
-        Enum.EasingDirection.Out
-    )
+    local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+    local slideIn = TweenService:Create(notificationFrame, tweenInfo, {Position = UDim2.new(1, -320, 1, -100)})
     
-    local slideIn = TweenService:Create(
-        notificationFrame,
-        tweenInfo,
-        {Position = UDim2.new(1, -320, 1, -100)}
-    )
+    local tweenInfoOut = TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In)
+    local slideOut = TweenService:Create(notificationFrame, tweenInfoOut, {Position = UDim2.new(1, 300, 1, -100)})
     
-    -- Animação de saída (deslizar para a direita)
-    local tweenInfoOut = TweenInfo.new(
-        0.4,
-        Enum.EasingStyle.Back,
-        Enum.EasingDirection.In
-    )
-    
-    local slideOut = TweenService:Create(
-        notificationFrame,
-        tweenInfoOut,
-        {Position = UDim2.new(1, 300, 1, -100)}
-    )
-    
-    -- Executar animações
     slideIn:Play()
     
-    -- Aguardar 4 segundos e deslizar para fora
     task.spawn(function()
         wait(4)
         slideOut:Play()
-        
-        -- Remover após a animação terminar
         slideOut.Completed:Connect(function()
             screenGui:Destroy()
         end)
@@ -167,15 +136,11 @@ end
 -- ========================================
 -- BYPASS PARA BROOKHAVEN
 -- ========================================
-
 local function disableBrookhavenAntiCheat()
     pcall(function()
         for _, v in pairs(game:GetDescendants()) do
             if v:IsA("LocalScript") then
-                if v.Name:lower():find("anti") or 
-                   v.Name:lower():find("detect") or 
-                   v.Name:lower():find("security") or
-                   v.Name:lower():find("kick") then
+                if v.Name:lower():find("anti") or v.Name:lower():find("detect") or v.Name:lower():find("security") or v.Name:lower():find("kick") then
                     v.Enabled = false
                     v:Destroy()
                 end
@@ -186,19 +151,6 @@ local function disableBrookhavenAntiCheat()
     pcall(function()
         if ReplicatedStorage:FindFirstChild("AntiCheat") then
             ReplicatedStorage.AntiCheat:Destroy()
-        end
-    end)
-    
-    pcall(function()
-        for _, script in pairs(character:GetDescendants()) do
-            if script:IsA("LocalScript") and (
-                script.Name:lower():find("check") or 
-                script.Name:lower():find("verify") or
-                script.Name:lower():find("detect")
-            ) then
-                script.Enabled = false
-                script:Destroy()
-            end
         end
     end)
 end
@@ -214,10 +166,6 @@ local function prepareBrookhavenFly()
         humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, false)
         humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
         humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
-        
-        if rootPart:FindFirstChild("BodyHeightCheck") then
-            rootPart.BodyHeightCheck:Destroy()
-        end
     end)
 end
 
@@ -245,9 +193,7 @@ local PrincipalTab = Window:MakeTab({
     PremiumOnly = false
 })
 
-local InfoSection = PrincipalTab:AddSection({
-    Name = "Informações"
-})
+PrincipalTab:AddSection({Name = "Informações"})
 
 PrincipalTab:AddLabel("Dragon Hub - Versão 0.2")
 PrincipalTab:AddLabel("Brookhaven Edition")
@@ -259,17 +205,14 @@ else
     PrincipalTab:AddLabel("💻 Modo PC Ativo")
 end
 
--- Discord Invite com logo customizado
 PrincipalTab:AddDiscordInvite({
     Name = "Dragon Hub",
     Description = "Join server",
-    Logo = DRAGON_HUB_LOGO, -- Usando sua imagem aqui
+    Logo = DRAGON_HUB_LOGO,
     Invite = "https://discord.gg/dragonhub",
 })
 
-local StatusSection = PrincipalTab:AddSection({
-    Name = "Status do Sistema"
-})
+PrincipalTab:AddSection({Name = "Status do Sistema"})
 
 PrincipalTab:AddLabel("🟢 Todos os sistemas operacionais")
 PrincipalTab:AddLabel("✅ Bypass Brookhaven Ativo")
@@ -283,26 +226,742 @@ PrincipalTab:AddButton({
         
         redzlib:MakeNotification({
             Name = "Bypass Aplicado!",
-            Content = "Anti-cheat desabilitado, pode usar fly",
+            Content = "Anti-cheat desabilitado",
             Time = 3
         })
     end
 })
 
--- [Resto do código continua igual - Fly, Speed, Jump, Click TP, etc.]
--- Mantenho o código completo das funcionalidades...
+-- ========================================
+-- CRIAR BOTÕES DE FLY PARA MOBILE
+-- ========================================
+local flyButtons = nil
+
+local function createMobileFlyButtons()
+    if not isMobile then return end
+    
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "FlyControls"
+    screenGui.ResetOnSpawn = false
+    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    screenGui.DisplayOrder = 999
+    screenGui.Parent = player.PlayerGui
+    
+    local upButton = Instance.new("TextButton")
+    upButton.Size = UDim2.new(0, 70, 0, 70)
+    upButton.Position = UDim2.new(1, -90, 0.5, -150)
+    upButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    upButton.BackgroundTransparency = 0.3
+    upButton.Text = "⬆️"
+    upButton.TextSize = 30
+    upButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    upButton.Font = Enum.Font.GothamBold
+    upButton.Parent = screenGui
+    
+    local upCorner = Instance.new("UICorner")
+    upCorner.CornerRadius = UDim.new(0, 15)
+    upCorner.Parent = upButton
+    
+    local downButton = Instance.new("TextButton")
+    downButton.Size = UDim2.new(0, 70, 0, 70)
+    downButton.Position = UDim2.new(1, -90, 0.5, -70)
+    downButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    downButton.BackgroundTransparency = 0.3
+    downButton.Text = "⬇️"
+    downButton.TextSize = 30
+    downButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    downButton.Font = Enum.Font.GothamBold
+    downButton.Parent = screenGui
+    
+    local downCorner = Instance.new("UICorner")
+    downCorner.CornerRadius = UDim.new(0, 15)
+    downCorner.Parent = downButton
+    
+    upButton.MouseButton1Down:Connect(function()
+        flyUp = true
+        upButton.BackgroundColor3 = Color3.fromRGB(100, 200, 100)
+    end)
+    
+    upButton.MouseButton1Up:Connect(function()
+        flyUp = false
+        upButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    end)
+    
+    downButton.MouseButton1Down:Connect(function()
+        flyDown = true
+        downButton.BackgroundColor3 = Color3.fromRGB(200, 100, 100)
+    end)
+    
+    downButton.MouseButton1Up:Connect(function()
+        flyDown = false
+        downButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    end)
+    
+    screenGui.Enabled = false
+    return screenGui
+end
+
+local function removeMobileFlyButtons()
+    if flyButtons then
+        flyButtons:Destroy()
+        flyButtons = nil
+    end
+end
 
 -- ========================================
--- INICIALIZAÇÃO E NOTIFICAÇÃO DE BOAS-VINDAS
+-- TAB FLY
 -- ========================================
+local FlyTab = Window:MakeTab({
+    Name = "Fly",
+    Icon = "rbxassetid://7733764088",
+    PremiumOnly = false
+})
 
+FlyTab:AddSection({Name = "Sistema de Voo - Brookhaven"})
+
+if isMobile then
+    FlyTab:AddLabel("📱 Use o joystick para mover")
+    FlyTab:AddLabel("Use os botões ⬆️⬇️ para subir/descer")
+else
+    FlyTab:AddLabel("💻 Use W/A/S/D para mover")
+    FlyTab:AddLabel("Espaço para subir, Shift para descer")
+end
+
+FlyTab:AddLabel("⚠️ Fly otimizado para Brookhaven")
+
+local function cleanupFly()
+    if flyConnection then
+        flyConnection:Disconnect()
+        flyConnection = nil
+    end
+    
+    if bodyVelocity then
+        bodyVelocity:Destroy()
+        bodyVelocity = nil
+    end
+    
+    if bodyGyro then
+        bodyGyro:Destroy()
+        bodyGyro = nil
+    end
+    
+    if rootPart then
+        for _, child in pairs(rootPart:GetChildren()) do
+            if child:IsA("BodyVelocity") or child:IsA("BodyGyro") then
+                child:Destroy()
+            end
+        end
+    end
+    
+    if flyButtons then
+        flyButtons.Enabled = false
+    end
+    
+    flyUp = false
+    flyDown = false
+end
+
+local function isCharacterValid()
+    return player.Character 
+        and player.Character:FindFirstChild("Humanoid") 
+        and player.Character:FindFirstChild("HumanoidRootPart")
+        and player.Character.Humanoid.Health > 0
+end
+
+local function keepFlyActive()
+    if not flyEnabled then return end
+    
+    task.spawn(function()
+        while flyEnabled do
+            wait(5)
+            disableBrookhavenAntiCheat()
+            
+            if not bodyVelocity or not bodyGyro then
+                if flyEnabled then
+                    local wasEnabled = flyEnabled
+                    stopFly()
+                    wait(0.5)
+                    if wasEnabled then
+                        startFly()
+                    end
+                end
+            end
+        end
+    end)
+end
+
+local function startFly()
+    if flyEnabled then
+        redzlib:MakeNotification({
+            Name = "Aviso",
+            Content = "Fly já está ativo!",
+            Time = 2
+        })
+        return
+    end
+    
+    disableBrookhavenAntiCheat()
+    prepareBrookhavenFly()
+    cleanupFly()
+    
+    character = player.Character
+    if not isCharacterValid() then
+        redzlib:MakeNotification({
+            Name = "Erro",
+            Content = "Personagem inválido!",
+            Time = 3
+        })
+        return
+    end
+    
+    rootPart = character:FindFirstChild("HumanoidRootPart")
+    humanoid = character:FindFirstChild("Humanoid")
+    
+    if not rootPart or not humanoid then
+        redzlib:MakeNotification({
+            Name = "Erro",
+            Content = "Componentes não encontrados!",
+            Time = 3
+        })
+        return
+    end
+    
+    flyEnabled = true
+    
+    if isMobile and not flyButtons then
+        flyButtons = createMobileFlyButtons()
+    end
+    if flyButtons then
+        flyButtons.Enabled = true
+    end
+    
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
+    
+    bodyGyro = Instance.new("BodyGyro")
+    bodyGyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+    bodyGyro.P = 9000
+    bodyGyro.D = 500
+    bodyGyro.Parent = rootPart
+    
+    bodyVelocity = Instance.new("BodyVelocity")
+    bodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+    bodyVelocity.Velocity = Vector3.new(0, 0.1, 0)
+    bodyVelocity.P = 1250
+    bodyVelocity.Parent = rootPart
+    
+    keepFlyActive()
+    
+    flyConnection = RunService.Heartbeat:Connect(function()
+        if not isCharacterValid() or not flyEnabled then
+            stopFly()
+            return
+        end
+        
+        if not bodyVelocity or not bodyGyro or not bodyVelocity.Parent or not bodyGyro.Parent then
+            return
+        end
+        
+        local camera = workspace.CurrentCamera
+        local speed = flySpeed
+        local moveVector = Vector3.new(0, 0, 0)
+        
+        if isMobile then
+            local humanoidMoveDir = humanoid.MoveDirection
+            if humanoidMoveDir.Magnitude > 0 then
+                local cameraCFrame = camera.CFrame
+                local moveX = humanoidMoveDir.X
+                local moveZ = humanoidMoveDir.Z
+                
+                moveVector = (cameraCFrame.RightVector * moveX) + (cameraCFrame.LookVector * -moveZ)
+            end
+            
+            if flyUp then
+                moveVector = moveVector + Vector3.new(0, 1, 0)
+            end
+            if flyDown then
+                moveVector = moveVector - Vector3.new(0, 1, 0)
+            end
+        else
+            if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+                moveVector = moveVector + camera.CFrame.LookVector
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+                moveVector = moveVector - camera.CFrame.LookVector
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+                moveVector = moveVector - camera.CFrame.RightVector
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+                moveVector = moveVector + camera.CFrame.RightVector
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+                moveVector = moveVector + Vector3.new(0, 1, 0)
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) or UserInputService:IsKeyDown(Enum.KeyCode.RightShift) then
+                moveVector = moveVector - Vector3.new(0, 1, 0)
+            end
+        end
+        
+        if moveVector.Magnitude > 0 then
+            bodyVelocity.Velocity = moveVector.Unit * speed
+        else
+            bodyVelocity.Velocity = Vector3.new(0, 0.1, 0)
+        end
+        
+        bodyGyro.CFrame = camera.CFrame
+    end)
+    
+    redzlib:MakeNotification({
+        Name = "Fly Ativado!",
+        Content = "Sistema otimizado para Brookhaven ✅",
+        Time = 3
+    })
+end
+
+local function stopFly()
+    flyEnabled = false
+    cleanupFly()
+    
+    if humanoid then
+        humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, true)
+        humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, true)
+    end
+    
+    redzlib:MakeNotification({
+        Name = "Fly Desativado",
+        Content = "Sistema de voo foi desligado.",
+        Time = 2
+    })
+end
+
+FlyTab:AddToggle({
+    Name = "Ativar Fly",
+    Default = false,
+    Callback = function(value)
+        if value then
+            startFly()
+        else
+            stopFly()
+        end
+    end
+})
+
+FlyTab:AddSlider({
+    Name = "Velocidade do Fly",
+    Min = 10,
+    Max = 200,
+    Default = 50,
+    Increment = 5,
+    Callback = function(value)
+        flySpeed = value
+    end
+})
+
+FlyTab:AddSection({Name = "Velocidades Predefinidas"})
+
+FlyTab:AddButton({
+    Name = "Lento (30)",
+    Callback = function()
+        flySpeed = 30
+    end
+})
+
+FlyTab:AddButton({
+    Name = "Normal (50)",
+    Callback = function()
+        flySpeed = 50
+    end
+})
+
+FlyTab:AddButton({
+    Name = "Rápido (100)",
+    Callback = function()
+        flySpeed = 100
+    end
+})
+
+FlyTab:AddButton({
+    Name = "Muito Rápido (200)",
+    Callback = function()
+        flySpeed = 200
+    end
+})
+
+FlyTab:AddSection({Name = "Correção"})
+
+FlyTab:AddButton({
+    Name = "🔧 Resetar Fly",
+    Callback = function()
+        stopFly()
+        wait(0.5)
+        disableBrookhavenAntiCheat()
+        prepareBrookhavenFly()
+        
+        redzlib:MakeNotification({
+            Name = "Fly Resetado",
+            Content = "Sistema limpo e bypass reaplicado",
+            Time = 3
+        })
+    end
+})
+
+-- ========================================
+-- TAB SPEED
+-- ========================================
+local SpeedTab = Window:MakeTab({
+    Name = "Speed",
+    Icon = "rbxassetid://7733764088",
+    PremiumOnly = false
+})
+
+SpeedTab:AddSection({Name = "Sistema de Velocidade"})
+SpeedTab:AddLabel("Configure sua velocidade de corrida")
+
+SpeedTab:AddToggle({
+    Name = "Ativar Speed",
+    Default = false,
+    Callback = function(value)
+        speedEnabled = value
+        if speedEnabled then
+            humanoid.WalkSpeed = speedValue
+            redzlib:MakeNotification({
+                Name = "Speed Ativado!",
+                Content = "Velocidade: " .. speedValue,
+                Time = 2
+            })
+        else
+            humanoid.WalkSpeed = 16
+            redzlib:MakeNotification({
+                Name = "Speed Desativado",
+                Content = "Velocidade restaurada",
+                Time = 2
+            })
+        end
+    end
+})
+
+SpeedTab:AddSlider({
+    Name = "Velocidade",
+    Min = 0,
+    Max = 100,
+    Default = 16,
+    Increment = 1,
+    Callback = function(value)
+        speedValue = value
+        if speedEnabled then
+            humanoid.WalkSpeed = speedValue
+        end
+    end
+})
+
+RunService.Heartbeat:Connect(function()
+    if speedEnabled and humanoid then
+        humanoid.WalkSpeed = speedValue
+    end
+end)
+
+SpeedTab:AddSection({Name = "Velocidades Predefinidas"})
+
+SpeedTab:AddButton({
+    Name = "Normal (16)",
+    Callback = function()
+        speedValue = 16
+        if speedEnabled then humanoid.WalkSpeed = speedValue end
+    end
+})
+
+SpeedTab:AddButton({
+    Name = "Rápido (30)",
+    Callback = function()
+        speedValue = 30
+        if speedEnabled then humanoid.WalkSpeed = speedValue end
+    end
+})
+
+SpeedTab:AddButton({
+    Name = "Muito Rápido (50)",
+    Callback = function()
+        speedValue = 50
+        if speedEnabled then humanoid.WalkSpeed = speedValue end
+    end
+})
+
+SpeedTab:AddButton({
+    Name = "Super Rápido (100)",
+    Callback = function()
+        speedValue = 100
+        if speedEnabled then humanoid.WalkSpeed = speedValue end
+    end
+})
+
+-- ========================================
+-- TAB JUMP
+-- ========================================
+local JumpTab = Window:MakeTab({
+    Name = "Jump",
+    Icon = "rbxassetid://7733764088",
+    PremiumOnly = false
+})
+
+JumpTab:AddSection({Name = "Sistema de Pulo"})
+JumpTab:AddLabel("Configure a força do seu pulo")
+
+JumpTab:AddToggle({
+    Name = "Ativar Jump Power",
+    Default = false,
+    Callback = function(value)
+        jumpEnabled = value
+        if jumpEnabled then
+            humanoid.JumpPower = jumpValue
+            redzlib:MakeNotification({
+                Name = "Jump Ativado!",
+                Content = "Força de pulo: " .. jumpValue,
+                Time = 2
+            })
+        else
+            humanoid.JumpPower = 50
+            redzlib:MakeNotification({
+                Name = "Jump Desativado",
+                Content = "Força restaurada",
+                Time = 2
+            })
+        end
+    end
+})
+
+JumpTab:AddSlider({
+    Name = "Força do Pulo",
+    Min = 0,
+    Max = 200,
+    Default = 50,
+    Increment = 5,
+    Callback = function(value)
+        jumpValue = value
+        if jumpEnabled then
+            humanoid.JumpPower = jumpValue
+        end
+    end
+})
+
+RunService.Heartbeat:Connect(function()
+    if jumpEnabled and humanoid then
+        humanoid.JumpPower = jumpValue
+    end
+end)
+
+JumpTab:AddSection({Name = "Forças Predefinidas"})
+
+JumpTab:AddButton({
+    Name = "Normal (50)",
+    Callback = function()
+        jumpValue = 50
+        if jumpEnabled then humanoid.JumpPower = jumpValue end
+    end
+})
+
+JumpTab:AddButton({
+    Name = "Alto (100)",
+    Callback = function()
+        jumpValue = 100
+        if jumpEnabled then humanoid.JumpPower = jumpValue end
+    end
+})
+
+JumpTab:AddButton({
+    Name = "Muito Alto (150)",
+    Callback = function()
+        jumpValue = 150
+        if jumpEnabled then humanoid.JumpPower = jumpValue end
+    end
+})
+
+JumpTab:AddButton({
+    Name = "Super Alto (200)",
+    Callback = function()
+        jumpValue = 200
+        if jumpEnabled then humanoid.JumpPower = jumpValue end
+    end
+})
+
+-- ========================================
+-- TAB CLICK TP
+-- ========================================
+local ClickTPTab = Window:MakeTab({
+    Name = "Click TP",
+    Icon = "rbxassetid://7733764088",
+    PremiumOnly = false
+})
+
+ClickTPTab:AddSection({Name = "Teleporte por Clique"})
+
+if isMobile then
+    ClickTPTab:AddLabel("📱 Toque na tela onde quer ir")
+else
+    ClickTPTab:AddLabel("💻 Clique onde quer ir")
+end
+ClickTPTab:AddLabel("Equipe a ferramenta primeiro")
+
+ClickTPTab:AddButton({
+    Name = "Ativar Click TP",
+    Callback = function()
+        if ClickTPTool then
+            ClickTPTool:Destroy()
+        end
+        
+        ClickTPTool = Instance.new("Tool")
+        ClickTPTool.Name = "Click Teleport"
+        ClickTPTool.RequiresHandle = false
+        ClickTPTool.CanBeDropped = false
+        
+        ClickTPTool.Activated:Connect(function()
+            local mouse = player:GetMouse()
+            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                player.Character.HumanoidRootPart.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 3, 0))
+                
+                redzlib:MakeNotification({
+                    Name = "Teleportado!",
+                    Content = "Você foi teleportado",
+                    Time = 2
+                })
+            end
+        end)
+        
+        ClickTPTool.Parent = player.Backpack
+        
+        redzlib:MakeNotification({
+            Name = "Ferramenta Recebida!",
+            Content = "Equipe e " .. (isMobile and "toque" or "clique"),
+            Time = 4
+        })
+    end
+})
+
+ClickTPTab:AddButton({
+    Name = "Desativar Click TP",
+    Callback = function()
+        if ClickTPTool then
+            ClickTPTool:Destroy()
+            ClickTPTool = nil
+            
+            redzlib:MakeNotification({
+                Name = "Removido!",
+                Content = "Ferramenta de TP removida",
+                Time = 3
+            })
+        else
+            redzlib:MakeNotification({
+                Name = "Aviso",
+                Content = "Nenhuma ferramenta ativa",
+                Time = 2
+            })
+        end
+    end
+})
+
+-- ========================================
+-- TAB CONFIGURAÇÕES
+-- ========================================
+local SettingsTab = Window:MakeTab({
+    Name = "Configurações",
+    Icon = "rbxassetid://7733955511",
+    PremiumOnly = false
+})
+
+SettingsTab:AddSection({Name = "Sobre o Hub"})
+
+SettingsTab:AddLabel("Dragon Hub v0.2")
+SettingsTab:AddLabel("Brookhaven Edition")
+SettingsTab:AddLabel(isMobile and "📱 Versão Mobile" or "💻 Versão PC")
+SettingsTab:AddLabel("")
+SettingsTab:AddLabel("Funcionalidades:")
+SettingsTab:AddLabel("• Sistema de Voo Brookhaven")
+SettingsTab:AddLabel("• Bypass Anti-Cheat")
+SettingsTab:AddLabel("• Velocidade Customizada")
+SettingsTab:AddLabel("• Pulo Aprimorado")
+SettingsTab:AddLabel("• Click Teleport")
+
+SettingsTab:AddSection({Name = "Controles"})
+
+if not isMobile then
+    SettingsTab:AddBind({
+        Name = "Toggle UI",
+        Default = Enum.KeyCode.RightControl,
+        Hold = false,
+        Callback = function()
+            redzlib:ToggleUI()
+        end
+    })
+end
+
+SettingsTab:AddButton({
+    Name = "Fechar Hub",
+    Callback = function()
+        if flyEnabled then
+            stopFly()
+        end
+        if ClickTPTool then
+            ClickTPTool:Destroy()
+        end
+        removeMobileFlyButtons()
+        
+        redzlib:MakeNotification({
+            Name = "Até logo!",
+            Content = "Dragon Hub foi fechado.",
+            Time = 2
+        })
+        wait(2)
+        Window:Destroy()
+    end
+})
+
+-- ========================================
+-- CHARACTER RESPAWN
+-- ========================================
+player.CharacterAdded:Connect(function(char)
+    character = char
+    humanoid = character:WaitForChild("Humanoid")
+    rootPart = character:WaitForChild("HumanoidRootPart")
+    
+    task.spawn(function()
+        wait(2)
+        disableBrookhavenAntiCheat()
+    end)
+    
+    if flyEnabled then
+        stopFly()
+        flyEnabled = false
+    end
+    if speedEnabled then
+        speedEnabled = false
+        humanoid.WalkSpeed = 16
+    end
+    if jumpEnabled then
+        jumpEnabled = false
+        humanoid.JumpPower = 50
+    end
+    if ClickTPTool then
+        ClickTPTool:Destroy()
+        ClickTPTool = nil
+    end
+    
+    redzlib:MakeNotification({
+        Name = "Personagem Respawnado",
+        Content = "Bypass reaplicado",
+        Time = 3
+    })
+end)
+
+-- ========================================
+-- INICIALIZAÇÃO
+-- ========================================
 task.spawn(function()
     wait(1)
     showWelcomeNotification()
     
     redzlib:MakeNotification({
         Name = "Dragon Hub Carregado!",
-        Content = "Brookhaven Edition - " .. (isMobile and "Mobile 📱" or "PC 💻"),
+        Content = "Brookhaven - " .. (isMobile and "Mobile 📱" or "PC 💻"),
         Time = 4
     })
 end)
