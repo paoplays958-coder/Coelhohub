@@ -1,4 +1,4 @@
--- Dragon Hub 0.2 - Brookhaven Edition - CÓDIGO COMPLETO
+-- Dragon Hub 0.2 - Brookhaven Edition - CÓDIGO COMPLETO COM VEÍCULOS
 -- Compatível com PC e Mobile
 
 local Players = game:GetService("Players")
@@ -16,7 +16,7 @@ local rootPart = character:WaitForChild("HumanoidRootPart")
 local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
 
 -- LOGO DO DRAGON HUB (SUBSTITUA PELO ID DA SUA IMAGEM)
-local DRAGON_HUB_LOGO = "rbxassetid://18751483361" -- Cole o ID da sua imagem aqui
+local DRAGON_HUB_LOGO = "rbxassetid://18751483361"
 
 -- Variáveis de controle
 local flyEnabled = false
@@ -34,6 +34,12 @@ local flyConnection
 -- Variáveis para controle mobile
 local flyUp = false
 local flyDown = false
+
+-- Variáveis de veículos
+local selectedVehicle = "Sedan"
+local spawnAmount = 5
+local autoRepairEnabled = false
+local infiniteSpeedEnabled = false
 
 -- ========================================
 -- FUNÇÃO DE NOTIFICAÇÃO CUSTOMIZADA
@@ -216,21 +222,18 @@ PrincipalTab:AddSection({Name = "Status do Sistema"})
 
 PrincipalTab:AddLabel("🟢 Todos os sistemas operacionais")
 PrincipalTab:AddLabel("✅ Bypass Brookhaven Ativo")
-PrincipalTab:AddLabel("⚡ Fly, Speed, Jump e Click TP")
+PrincipalTab:AddLabel("⚡ Fly, Speed, Jump, Click TP e Veículos")
 
-PrincipalTab:AddButton({
-    Name = "🔓 Aplicar Bypass Brookhaven",
-    Callback = function()
-        disableBrookhavenAntiCheat()
-        prepareBrookhavenFly()
-        
-        redzlib:MakeNotification({
-            Name = "Bypass Aplicado!",
-            Content = "Anti-cheat desabilitado",
-            Time = 3
-        })
-    end
-})
+PrincipalTab:AddButton({"🔓 Aplicar Bypass Brookhaven", function()
+    disableBrookhavenAntiCheat()
+    prepareBrookhavenFly()
+    
+    redzlib:MakeNotification({
+        Name = "Bypass Aplicado!",
+        Content = "Anti-cheat desabilitado",
+        Time = 3
+    })
+end})
 
 -- ========================================
 -- CRIAR BOTÕES DE FLY PARA MOBILE
@@ -535,17 +538,19 @@ local function stopFly()
     })
 end
 
-FlyTab:AddToggle({
+local FlyToggle = FlyTab:AddToggle({
     Name = "Ativar Fly",
-    Default = false,
-    Callback = function(value)
-        if value then
-            startFly()
-        else
-            stopFly()
-        end
-    end
+    Description = "Ative o sistema de <font color='rgb(220, 50, 50)'>voo</font> otimizado para Brookhaven",
+    Default = false
 })
+
+FlyToggle:Callback(function(value)
+    if value then
+        startFly()
+    else
+        stopFly()
+    end
+end)
 
 FlyTab:AddSlider({
     Name = "Velocidade do Fly",
@@ -560,51 +565,36 @@ FlyTab:AddSlider({
 
 FlyTab:AddSection({Name = "Velocidades Predefinidas"})
 
-FlyTab:AddButton({
-    Name = "Lento (30)",
-    Callback = function()
-        flySpeed = 30
-    end
-})
+FlyTab:AddButton({"Lento (30)", function()
+    flySpeed = 30
+end})
 
-FlyTab:AddButton({
-    Name = "Normal (50)",
-    Callback = function()
-        flySpeed = 50
-    end
-})
+FlyTab:AddButton({"Normal (50)", function()
+    flySpeed = 50
+end})
 
-FlyTab:AddButton({
-    Name = "Rápido (100)",
-    Callback = function()
-        flySpeed = 100
-    end
-})
+FlyTab:AddButton({"Rápido (100)", function()
+    flySpeed = 100
+end})
 
-FlyTab:AddButton({
-    Name = "Muito Rápido (200)",
-    Callback = function()
-        flySpeed = 200
-    end
-})
+FlyTab:AddButton({"Muito Rápido (200)", function()
+    flySpeed = 200
+end})
 
 FlyTab:AddSection({Name = "Correção"})
 
-FlyTab:AddButton({
-    Name = "🔧 Resetar Fly",
-    Callback = function()
-        stopFly()
-        wait(0.5)
-        disableBrookhavenAntiCheat()
-        prepareBrookhavenFly()
-        
-        redzlib:MakeNotification({
-            Name = "Fly Resetado",
-            Content = "Sistema limpo e bypass reaplicado",
-            Time = 3
-        })
-    end
-})
+FlyTab:AddButton({"🔧 Resetar Fly", function()
+    stopFly()
+    wait(0.5)
+    disableBrookhavenAntiCheat()
+    prepareBrookhavenFly()
+    
+    redzlib:MakeNotification({
+        Name = "Fly Resetado",
+        Content = "Sistema limpo e bypass reaplicado",
+        Time = 3
+    })
+end})
 
 -- ========================================
 -- TAB SPEED
@@ -618,28 +608,30 @@ local SpeedTab = Window:MakeTab({
 SpeedTab:AddSection({Name = "Sistema de Velocidade"})
 SpeedTab:AddLabel("Configure sua velocidade de corrida")
 
-SpeedTab:AddToggle({
+local SpeedToggle = SpeedTab:AddToggle({
     Name = "Ativar Speed",
-    Default = false,
-    Callback = function(value)
-        speedEnabled = value
-        if speedEnabled then
-            humanoid.WalkSpeed = speedValue
-            redzlib:MakeNotification({
-                Name = "Speed Ativado!",
-                Content = "Velocidade: " .. speedValue,
-                Time = 2
-            })
-        else
-            humanoid.WalkSpeed = 16
-            redzlib:MakeNotification({
-                Name = "Speed Desativado",
-                Content = "Velocidade restaurada",
-                Time = 2
-            })
-        end
-    end
+    Description = "Ative a <font color='rgb(100, 200, 255)'>velocidade</font> customizada",
+    Default = false
 })
+
+SpeedToggle:Callback(function(value)
+    speedEnabled = value
+    if speedEnabled then
+        humanoid.WalkSpeed = speedValue
+        redzlib:MakeNotification({
+            Name = "Speed Ativado!",
+            Content = "Velocidade: " .. speedValue,
+            Time = 2
+        })
+    else
+        humanoid.WalkSpeed = 16
+        redzlib:MakeNotification({
+            Name = "Speed Desativado",
+            Content = "Velocidade restaurada",
+            Time = 2
+        })
+    end
+end)
 
 SpeedTab:AddSlider({
     Name = "Velocidade",
@@ -663,37 +655,25 @@ end)
 
 SpeedTab:AddSection({Name = "Velocidades Predefinidas"})
 
-SpeedTab:AddButton({
-    Name = "Normal (16)",
-    Callback = function()
-        speedValue = 16
-        if speedEnabled then humanoid.WalkSpeed = speedValue end
-    end
-})
+SpeedTab:AddButton({"Normal (16)", function()
+    speedValue = 16
+    if speedEnabled then humanoid.WalkSpeed = speedValue end
+end})
 
-SpeedTab:AddButton({
-    Name = "Rápido (30)",
-    Callback = function()
-        speedValue = 30
-        if speedEnabled then humanoid.WalkSpeed = speedValue end
-    end
-})
+SpeedTab:AddButton({"Rápido (30)", function()
+    speedValue = 30
+    if speedEnabled then humanoid.WalkSpeed = speedValue end
+end})
 
-SpeedTab:AddButton({
-    Name = "Muito Rápido (50)",
-    Callback = function()
-        speedValue = 50
-        if speedEnabled then humanoid.WalkSpeed = speedValue end
-    end
-})
+SpeedTab:AddButton({"Muito Rápido (50)", function()
+    speedValue = 50
+    if speedEnabled then humanoid.WalkSpeed = speedValue end
+end})
 
-SpeedTab:AddButton({
-    Name = "Super Rápido (100)",
-    Callback = function()
-        speedValue = 100
-        if speedEnabled then humanoid.WalkSpeed = speedValue end
-    end
-})
+SpeedTab:AddButton({"Super Rápido (100)", function()
+    speedValue = 100
+    if speedEnabled then humanoid.WalkSpeed = speedValue end
+end})
 
 -- ========================================
 -- TAB JUMP
@@ -707,28 +687,30 @@ local JumpTab = Window:MakeTab({
 JumpTab:AddSection({Name = "Sistema de Pulo"})
 JumpTab:AddLabel("Configure a força do seu pulo")
 
-JumpTab:AddToggle({
+local JumpToggle = JumpTab:AddToggle({
     Name = "Ativar Jump Power",
-    Default = false,
-    Callback = function(value)
-        jumpEnabled = value
-        if jumpEnabled then
-            humanoid.JumpPower = jumpValue
-            redzlib:MakeNotification({
-                Name = "Jump Ativado!",
-                Content = "Força de pulo: " .. jumpValue,
-                Time = 2
-            })
-        else
-            humanoid.JumpPower = 50
-            redzlib:MakeNotification({
-                Name = "Jump Desativado",
-                Content = "Força restaurada",
-                Time = 2
-            })
-        end
-    end
+    Description = "Ative o <font color='rgb(100, 255, 100)'>pulo</font> aprimorado",
+    Default = false
 })
+
+JumpToggle:Callback(function(value)
+    jumpEnabled = value
+    if jumpEnabled then
+        humanoid.JumpPower = jumpValue
+        redzlib:MakeNotification({
+            Name = "Jump Ativado!",
+            Content = "Força de pulo: " .. jumpValue,
+            Time = 2
+        })
+    else
+        humanoid.JumpPower = 50
+        redzlib:MakeNotification({
+            Name = "Jump Desativado",
+            Content = "Força restaurada",
+            Time = 2
+        })
+    end
+end)
 
 JumpTab:AddSlider({
     Name = "Força do Pulo",
@@ -752,37 +734,25 @@ end)
 
 JumpTab:AddSection({Name = "Forças Predefinidas"})
 
-JumpTab:AddButton({
-    Name = "Normal (50)",
-    Callback = function()
-        jumpValue = 50
-        if jumpEnabled then humanoid.JumpPower = jumpValue end
-    end
-})
+JumpTab:AddButton({"Normal (50)", function()
+    jumpValue = 50
+    if jumpEnabled then humanoid.JumpPower = jumpValue end
+end})
 
-JumpTab:AddButton({
-    Name = "Alto (100)",
-    Callback = function()
-        jumpValue = 100
-        if jumpEnabled then humanoid.JumpPower = jumpValue end
-    end
-})
+JumpTab:AddButton({"Alto (100)", function()
+    jumpValue = 100
+    if jumpEnabled then humanoid.JumpPower = jumpValue end
+end})
 
-JumpTab:AddButton({
-    Name = "Muito Alto (150)",
-    Callback = function()
-        jumpValue = 150
-        if jumpEnabled then humanoid.JumpPower = jumpValue end
-    end
-})
+JumpTab:AddButton({"Muito Alto (150)", function()
+    jumpValue = 150
+    if jumpEnabled then humanoid.JumpPower = jumpValue end
+end})
 
-JumpTab:AddButton({
-    Name = "Super Alto (200)",
-    Callback = function()
-        jumpValue = 200
-        if jumpEnabled then humanoid.JumpPower = jumpValue end
-    end
-})
+JumpTab:AddButton({"Super Alto (200)", function()
+    jumpValue = 200
+    if jumpEnabled then humanoid.JumpPower = jumpValue end
+end})
 
 -- ========================================
 -- TAB CLICK TP
@@ -802,62 +772,417 @@ else
 end
 ClickTPTab:AddLabel("Equipe a ferramenta primeiro")
 
-ClickTPTab:AddButton({
-    Name = "Ativar Click TP",
-    Callback = function()
-        if ClickTPTool then
-            ClickTPTool:Destroy()
+ClickTPTab:AddButton({"Ativar Click TP", function()
+    if ClickTPTool then
+        ClickTPTool:Destroy()
+    end
+    
+    ClickTPTool = Instance.new("Tool")
+    ClickTPTool.Name = "Click Teleport"
+    ClickTPTool.RequiresHandle = false
+    ClickTPTool.CanBeDropped = false
+    
+    ClickTPTool.Activated:Connect(function()
+        local mouse = player:GetMouse()
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 3, 0))
+            
+            redzlib:MakeNotification({
+                Name = "Teleportado!",
+                Content = "Você foi teleportado",
+                Time = 2
+            })
         end
-        
-        ClickTPTool = Instance.new("Tool")
-        ClickTPTool.Name = "Click Teleport"
-        ClickTPTool.RequiresHandle = false
-        ClickTPTool.CanBeDropped = false
-        
-        ClickTPTool.Activated:Connect(function()
-            local mouse = player:GetMouse()
-            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                player.Character.HumanoidRootPart.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 3, 0))
-                
-                redzlib:MakeNotification({
-                    Name = "Teleportado!",
-                    Content = "Você foi teleportado",
-                    Time = 2
-                })
-            end
-        end)
-        
-        ClickTPTool.Parent = player.Backpack
+    end)
+    
+    ClickTPTool.Parent = player.Backpack
+    
+    redzlib:MakeNotification({
+        Name = "Ferramenta Recebida!",
+        Content = "Equipe e " .. (isMobile and "toque" or "clique"),
+        Time = 4
+    })
+end})
+
+ClickTPTab:AddButton({"Desativar Click TP", function()
+    if ClickTPTool then
+        ClickTPTool:Destroy()
+        ClickTPTool = nil
         
         redzlib:MakeNotification({
-            Name = "Ferramenta Recebida!",
-            Content = "Equipe e " .. (isMobile and "toque" or "clique"),
-            Time = 4
+            Name = "Removido!",
+            Content = "Ferramenta de TP removida",
+            Time = 3
+        })
+    else
+        redzlib:MakeNotification({
+            Name = "Aviso",
+            Content = "Nenhuma ferramenta ativa",
+            Time = 2
+        })
+    end
+end})
+
+-- ========================================
+-- TAB VEÍCULOS
+-- ========================================
+local VehiclesTab = Window:MakeTab({
+    Name = "Veículos",
+    Icon = "rbxassetid://7733779730",
+    PremiumOnly = false
+})
+
+VehiclesTab:AddSection({Name = "Sistema de Spawn de Veículos"})
+
+VehiclesTab:AddLabel("Spawne até 10 veículos de uma vez!")
+VehiclesTab:AddLabel("Selecione o veículo e clique em spawnar")
+
+-- Lista de veículos disponíveis no Brookhaven
+local vehiclesList = {
+    "Sedan",
+    "SUV",
+    "Pickup",
+    "Van",
+    "SportsCar",
+    "Tesla",
+    "Jeep",
+    "Convertible",
+    "Limousine",
+    "RaceCar",
+    "MonsterTruck",
+    "Ambulance",
+    "FireTruck",
+    "PoliceCar",
+    "SwatVan",
+    "Boat",
+    "JetSki",
+    "Yacht",
+    "Helicopter",
+    "PrivateJet",
+    "Motorcycle",
+    "Bicycle",
+    "Scooter",
+    "GoKart",
+    "Tractor",
+    "IceCreamTruck",
+    "SchoolBus",
+    "TourBus"
+}
+
+VehiclesTab:AddDropdown({
+    Name = "Selecionar Veículo",
+    Options = vehiclesList,
+    Default = "Sedan",
+    Callback = function(value)
+        selectedVehicle = value
+        redzlib:MakeNotification({
+            Name = "Veículo Selecionado",
+            Content = value .. " foi selecionado",
+            Time = 2
         })
     end
 })
 
-ClickTPTab:AddButton({
-    Name = "Desativar Click TP",
-    Callback = function()
-        if ClickTPTool then
-            ClickTPTool:Destroy()
-            ClickTPTool = nil
-            
-            redzlib:MakeNotification({
-                Name = "Removido!",
-                Content = "Ferramenta de TP removida",
-                Time = 3
-            })
-        else
-            redzlib:MakeNotification({
-                Name = "Aviso",
-                Content = "Nenhuma ferramenta ativa",
-                Time = 2
-            })
-        end
+VehiclesTab:AddSlider({
+    Name = "Quantidade de Veículos",
+    Min = 1,
+    Max = 10,
+    Default = 5,
+    Increment = 1,
+    Callback = function(value)
+        spawnAmount = value
     end
 })
+
+VehiclesTab:AddSection({Name = "Spawn de Veículos"})
+
+local function spawnVehicles(vehicleName, amount)
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    
+    local spawnVehicleRemote = nil
+    
+    pcall(function()
+        for _, remote in pairs(ReplicatedStorage:GetDescendants()) do
+            if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+                if remote.Name:lower():find("vehicle") or 
+                   remote.Name:lower():find("spawn") or
+                   remote.Name:lower():find("car") then
+                    spawnVehicleRemote = remote
+                    break
+                end
+            end
+        end
+    end)
+    
+    if not spawnVehicleRemote then
+        redzlib:MakeNotification({
+            Name = "Erro",
+            Content = "Sistema de veículos não encontrado",
+            Time = 3
+        })
+        return
+    end
+    
+    local spawnedCount = 0
+    for i = 1, amount do
+        pcall(function()
+            if spawnVehicleRemote:IsA("RemoteEvent") then
+                spawnVehicleRemote:FireServer(vehicleName)
+            elseif spawnVehicleRemote:IsA("RemoteFunction") then
+                spawnVehicleRemote:InvokeServer(vehicleName)
+            end
+            spawnedCount = spawnedCount + 1
+            wait(0.1)
+        end)
+    end
+    
+    redzlib:MakeNotification({
+        Name = "Veículos Spawnados!",
+        Content = spawnedCount .. "x " .. vehicleName .. " spawnados",
+        Time = 3
+    })
+end
+
+local function spawnVehiclesBrookhaven(vehicleName, amount)
+    local success = false
+    
+    pcall(function()
+        local vehicleFolder = workspace:FindFirstChild("Vehicles") or workspace:FindFirstChild("Cars")
+        if vehicleFolder then
+            local vehicleModel = vehicleFolder:FindFirstChild(vehicleName)
+            if vehicleModel then
+                for i = 1, amount do
+                    local clone = vehicleModel:Clone()
+                    local offset = Vector3.new(i * 10, 0, 0)
+                    clone:SetPrimaryPartCFrame(rootPart.CFrame + offset)
+                    clone.Parent = workspace
+                    wait(0.1)
+                end
+                success = true
+            end
+        end
+    end)
+    
+    if success then
+        redzlib:MakeNotification({
+            Name = "Veículos Spawnados!",
+            Content = amount .. "x " .. vehicleName,
+            Time = 3
+        })
+    else
+        spawnVehicles(vehicleName, amount)
+    end
+end
+
+VehiclesTab:AddButton({"🚗 Spawnar Veículos", function()
+    if not selectedVehicle then
+        redzlib:MakeNotification({
+            Name = "Erro",
+            Content = "Selecione um veículo primeiro",
+            Time = 2
+        })
+        return
+    end
+    
+    redzlib:MakeNotification({
+        Name = "Spawnando...",
+        Content = "Spawnando " .. spawnAmount .. "x " .. selectedVehicle,
+        Time = 2
+    })
+    
+    task.spawn(function()
+        spawnVehiclesBrookhaven(selectedVehicle, spawnAmount)
+    end)
+end})
+
+VehiclesTab:AddSection({Name = "Spawn Rápido"})
+
+VehiclesTab:AddButton({"🚓 5x Police Car", function()
+    selectedVehicle = "PoliceCar"
+    spawnVehiclesBrookhaven("PoliceCar", 5)
+end})
+
+VehiclesTab:AddButton({"🚑 5x Ambulance", function()
+    selectedVehicle = "Ambulance"
+    spawnVehiclesBrookhaven("Ambulance", 5)
+end})
+
+VehiclesTab:AddButton({"🏎️ 5x Sports Car", function()
+    selectedVehicle = "SportsCar"
+    spawnVehiclesBrookhaven("SportsCar", 5)
+end})
+
+VehiclesTab:AddButton({"🚁 5x Helicopter", function()
+    selectedVehicle = "Helicopter"
+    spawnVehiclesBrookhaven("Helicopter", 5)
+end})
+
+VehiclesTab:AddButton({"🚙 5x SUV", function()
+    selectedVehicle = "SUV"
+    spawnVehiclesBrookhaven("SUV", 5)
+end})
+
+VehiclesTab:AddSection({Name = "Gerenciar Veículos"})
+
+VehiclesTab:AddButton({"🗑️ Deletar Todos os Veículos", function()
+    local deletedCount = 0
+    
+    pcall(function()
+        for _, obj in pairs(workspace:GetDescendants()) do
+            if obj:IsA("VehicleSeat") or obj:FindFirstChild("VehicleSeat") then
+                local vehicle = obj:FindFirstAncestorOfClass("Model")
+                if vehicle then
+                    vehicle:Destroy()
+                    deletedCount = deletedCount + 1
+                end
+            end
+        end
+    end)
+    
+    redzlib:MakeNotification({
+        Name = "Veículos Deletados",
+        Content = deletedCount .. " veículos foram removidos",
+        Time = 3
+    })
+end})
+
+VehiclesTab:AddButton({"📍 Trazer Veículos Para Mim", function()
+    local movedCount = 0
+    
+    pcall(function()
+        for _, obj in pairs(workspace:GetDescendants()) do
+            if obj:IsA("VehicleSeat") then
+                local vehicle = obj:FindFirstAncestorOfClass("Model")
+                if vehicle and vehicle.PrimaryPart then
+                    local angle = (movedCount * 45) * math.pi / 180
+                    local distance = 15
+                    local offset = Vector3.new(
+                        math.cos(angle) * distance,
+                        5,
+                        math.sin(angle) * distance
+                    )
+                    
+                    vehicle:SetPrimaryPartCFrame(rootPart.CFrame + offset)
+                    movedCount = movedCount + 1
+                    
+                    if movedCount >= 8 then break end
+                end
+            end
+        end
+    end)
+    
+    redzlib:MakeNotification({
+        Name = "Veículos Movidos",
+        Content = movedCount .. " veículos foram trazidos",
+        Time = 3
+    })
+end})
+
+VehiclesTab:AddSection({Name = "Opções Especiais"})
+
+local AutoRepairToggle = VehiclesTab:AddToggle({
+    Name = "Auto Reparar Veículo",
+    Description = "Repara automaticamente o <font color='rgb(255, 200, 50)'>veículo</font> que você está usando",
+    Default = false
+})
+
+AutoRepairToggle:Callback(function(value)
+    autoRepairEnabled = value
+    
+    if value then
+        redzlib:MakeNotification({
+            Name = "Auto Repair Ativado",
+            Content = "Seus veículos serão reparados automaticamente",
+            Time = 2
+        })
+        
+        task.spawn(function()
+            while autoRepairEnabled do
+                wait(1)
+                
+                pcall(function()
+                    if character and character:FindFirstChild("Humanoid") then
+                        local seat = character.Humanoid.SeatPart
+                        if seat and seat:IsA("VehicleSeat") then
+                            local vehicle = seat:FindFirstAncestorOfClass("Model")
+                            if vehicle then
+                                for _, part in pairs(vehicle:GetDescendants()) do
+                                    if part:IsA("BasePart") then
+                                        part.Color = part.Color
+                                        if part:FindFirstChild("Smoke") then
+                                            part.Smoke:Destroy()
+                                        end
+                                        if part:FindFirstChild("Fire") then
+                                            part.Fire:Destroy()
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end)
+            end
+        end)
+    else
+        redzlib:MakeNotification({
+            Name = "Auto Repair Desativado",
+            Content = "Auto repair foi desligado",
+            Time = 2
+        })
+    end
+end)
+
+local InfiniteSpeedToggle = VehiclesTab:AddToggle({
+    Name = "Velocidade Infinita",
+    Description = "Ative <font color='rgb(255, 100, 100)'>velocidade</font> máxima em qualquer veículo",
+    Default = false
+})
+
+InfiniteSpeedToggle:Callback(function(value)
+    infiniteSpeedEnabled = value
+    
+    if value then
+        redzlib:MakeNotification({
+            Name = "Velocidade Infinita Ativada",
+            Content = "Seus veículos ficarão super rápidos!",
+            Time = 2
+        })
+        
+        task.spawn(function()
+            while infiniteSpeedEnabled do
+                wait(0.1)
+                
+                pcall(function()
+                    if character and character:FindFirstChild("Humanoid") then
+                        local seat = character.Humanoid.SeatPart
+                        if seat and seat:IsA("VehicleSeat") then
+                            seat.MaxSpeed = 500
+                            seat.Torque = 10000
+                            seat.TurnSpeed = 10
+                        end
+                    end
+                end)
+            end
+        end)
+    else
+        pcall(function()
+            if character and character:FindFirstChild("Humanoid") then
+                local seat = character.Humanoid.SeatPart
+                if seat and seat:IsA("VehicleSeat") then
+                    seat.MaxSpeed = 25
+                    seat.Torque = 500
+                    seat.TurnSpeed = 1
+                end
+            end
+        end)
+        
+        redzlib:MakeNotification({
+            Name = "Velocidade Normal",
+            Content = "Velocidade restaurada ao normal",
+            Time = 2
+        })
+    end
+end)
 
 -- ========================================
 -- TAB CONFIGURAÇÕES
@@ -880,6 +1205,7 @@ SettingsTab:AddLabel("• Bypass Anti-Cheat")
 SettingsTab:AddLabel("• Velocidade Customizada")
 SettingsTab:AddLabel("• Pulo Aprimorado")
 SettingsTab:AddLabel("• Click Teleport")
+SettingsTab:AddLabel("• Sistema de Veículos")
 
 SettingsTab:AddSection({Name = "Controles"})
 
@@ -894,26 +1220,23 @@ if not isMobile then
     })
 end
 
-SettingsTab:AddButton({
-    Name = "Fechar Hub",
-    Callback = function()
-        if flyEnabled then
-            stopFly()
-        end
-        if ClickTPTool then
-            ClickTPTool:Destroy()
-        end
-        removeMobileFlyButtons()
-        
-        redzlib:MakeNotification({
-            Name = "Até logo!",
-            Content = "Dragon Hub foi fechado.",
-            Time = 2
-        })
-        wait(2)
-        Window:Destroy()
+SettingsTab:AddButton({"Fechar Hub", function()
+    if flyEnabled then
+        stopFly()
     end
-})
+    if ClickTPTool then
+        ClickTPTool:Destroy()
+    end
+    removeMobileFlyButtons()
+    
+    redzlib:MakeNotification({
+        Name = "Até logo!",
+        Content = "Dragon Hub foi fechado.",
+        Time = 2
+    })
+    wait(2)
+    Window:Destroy()
+end})
 
 -- ========================================
 -- CHARACTER RESPAWN
