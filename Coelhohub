@@ -1,4 +1,4 @@
--- Dragon Hub 0.2 - Brookhaven Edition - CÓDIGO COMPLETO COM VEÍCULOS
+-- Dragon Hub 0.2 - Brookhaven Edition - CÓDIGO COMPLETO
 -- Compatível com PC e Mobile
 
 local Players = game:GetService("Players")
@@ -224,7 +224,7 @@ PrincipalTab:AddLabel("🟢 Todos os sistemas operacionais")
 PrincipalTab:AddLabel("✅ Bypass Brookhaven Ativo")
 PrincipalTab:AddLabel("⚡ Fly, Speed, Jump, Click TP e Veículos")
 
-PrincipalTab:AddButton({"🔓 Aplicar Bypass Brookhaven", function()
+PrincipalTab:AddButton({"🔓 Aplicar Bypass Brookhaven", function(Value)
     disableBrookhavenAntiCheat()
     prepareBrookhavenFly()
     
@@ -538,20 +538,22 @@ local function stopFly()
     })
 end
 
+-- Toggle Fly
 local FlyToggle = FlyTab:AddToggle({
     Name = "Ativar Fly",
     Description = "Ative o sistema de <font color='rgb(220, 50, 50)'>voo</font> otimizado para Brookhaven",
     Default = false
 })
 
-FlyToggle:Callback(function(value)
-    if value then
+FlyToggle:Callback(function(Value)
+    if Value then
         startFly()
     else
         stopFly()
     end
 end)
 
+-- Slider velocidade do Fly
 FlyTab:AddSlider({
     Name = "Velocidade do Fly",
     Min = 10,
@@ -565,25 +567,25 @@ FlyTab:AddSlider({
 
 FlyTab:AddSection({Name = "Velocidades Predefinidas"})
 
-FlyTab:AddButton({"Lento (30)", function()
+FlyTab:AddButton({"Lento (30)", function(Value)
     flySpeed = 30
 end})
 
-FlyTab:AddButton({"Normal (50)", function()
+FlyTab:AddButton({"Normal (50)", function(Value)
     flySpeed = 50
 end})
 
-FlyTab:AddButton({"Rápido (100)", function()
+FlyTab:AddButton({"Rápido (100)", function(Value)
     flySpeed = 100
 end})
 
-FlyTab:AddButton({"Muito Rápido (200)", function()
+FlyTab:AddButton({"Muito Rápido (200)", function(Value)
     flySpeed = 200
 end})
 
 FlyTab:AddSection({Name = "Correção"})
 
-FlyTab:AddButton({"🔧 Resetar Fly", function()
+FlyTab:AddButton({"🔧 Resetar Fly", function(Value)
     stopFly()
     wait(0.5)
     disableBrookhavenAntiCheat()
@@ -608,14 +610,15 @@ local SpeedTab = Window:MakeTab({
 SpeedTab:AddSection({Name = "Sistema de Velocidade"})
 SpeedTab:AddLabel("Configure sua velocidade de corrida")
 
+-- Toggle Speed
 local SpeedToggle = SpeedTab:AddToggle({
     Name = "Ativar Speed",
     Description = "Ative a <font color='rgb(100, 200, 255)'>velocidade</font> customizada",
     Default = false
 })
 
-SpeedToggle:Callback(function(value)
-    speedEnabled = value
+SpeedToggle:Callback(function(Value)
+    speedEnabled = Value
     if speedEnabled then
         humanoid.WalkSpeed = speedValue
         redzlib:MakeNotification({
@@ -655,22 +658,22 @@ end)
 
 SpeedTab:AddSection({Name = "Velocidades Predefinidas"})
 
-SpeedTab:AddButton({"Normal (16)", function()
+SpeedTab:AddButton({"Normal (16)", function(Value)
     speedValue = 16
     if speedEnabled then humanoid.WalkSpeed = speedValue end
 end})
 
-SpeedTab:AddButton({"Rápido (30)", function()
+SpeedTab:AddButton({"Rápido (30)", function(Value)
     speedValue = 30
     if speedEnabled then humanoid.WalkSpeed = speedValue end
 end})
 
-SpeedTab:AddButton({"Muito Rápido (50)", function()
+SpeedTab:AddButton({"Muito Rápido (50)", function(Value)
     speedValue = 50
     if speedEnabled then humanoid.WalkSpeed = speedValue end
 end})
 
-SpeedTab:AddButton({"Super Rápido (100)", function()
+SpeedTab:AddButton({"Super Rápido (100)", function(Value)
     speedValue = 100
     if speedEnabled then humanoid.WalkSpeed = speedValue end
 end})
@@ -687,14 +690,15 @@ local JumpTab = Window:MakeTab({
 JumpTab:AddSection({Name = "Sistema de Pulo"})
 JumpTab:AddLabel("Configure a força do seu pulo")
 
+-- Toggle Jump
 local JumpToggle = JumpTab:AddToggle({
     Name = "Ativar Jump Power",
     Description = "Ative o <font color='rgb(100, 255, 100)'>pulo</font> aprimorado",
     Default = false
 })
 
-JumpToggle:Callback(function(value)
-    jumpEnabled = value
+JumpToggle:Callback(function(Value)
+    jumpEnabled = Value
     if jumpEnabled then
         humanoid.JumpPower = jumpValue
         redzlib:MakeNotification({
@@ -734,22 +738,22 @@ end)
 
 JumpTab:AddSection({Name = "Forças Predefinidas"})
 
-JumpTab:AddButton({"Normal (50)", function()
+JumpTab:AddButton({"Normal (50)", function(Value)
     jumpValue = 50
     if jumpEnabled then humanoid.JumpPower = jumpValue end
 end})
 
-JumpTab:AddButton({"Alto (100)", function()
+JumpTab:AddButton({"Alto (100)", function(Value)
     jumpValue = 100
     if jumpEnabled then humanoid.JumpPower = jumpValue end
 end})
 
-JumpTab:AddButton({"Muito Alto (150)", function()
+JumpTab:AddButton({"Muito Alto (150)", function(Value)
     jumpValue = 150
     if jumpEnabled then humanoid.JumpPower = jumpValue end
 end})
 
-JumpTab:AddButton({"Super Alto (200)", function()
+JumpTab:AddButton({"Super Alto (200)", function(Value)
     jumpValue = 200
     if jumpEnabled then humanoid.JumpPower = jumpValue end
 end})
@@ -772,7 +776,7 @@ else
 end
 ClickTPTab:AddLabel("Equipe a ferramenta primeiro")
 
-ClickTPTab:AddButton({"Ativar Click TP", function()
+ClickTPTab:AddButton({"Ativar Click TP", function(Value)
     if ClickTPTool then
         ClickTPTool:Destroy()
     end
@@ -804,7 +808,7 @@ ClickTPTab:AddButton({"Ativar Click TP", function()
     })
 end})
 
-ClickTPTab:AddButton({"Desativar Click TP", function()
+ClickTPTab:AddButton({"Desativar Click TP", function(Value)
     if ClickTPTool then
         ClickTPTool:Destroy()
         ClickTPTool = nil
@@ -974,7 +978,7 @@ local function spawnVehiclesBrookhaven(vehicleName, amount)
     end
 end
 
-VehiclesTab:AddButton({"🚗 Spawnar Veículos", function()
+VehiclesTab:AddButton({"🚗 Spawnar Veículos", function(Value)
     if not selectedVehicle then
         redzlib:MakeNotification({
             Name = "Erro",
@@ -997,34 +1001,34 @@ end})
 
 VehiclesTab:AddSection({Name = "Spawn Rápido"})
 
-VehiclesTab:AddButton({"🚓 5x Police Car", function()
+VehiclesTab:AddButton({"🚓 5x Police Car", function(Value)
     selectedVehicle = "PoliceCar"
     spawnVehiclesBrookhaven("PoliceCar", 5)
 end})
 
-VehiclesTab:AddButton({"🚑 5x Ambulance", function()
+VehiclesTab:AddButton({"🚑 5x Ambulance", function(Value)
     selectedVehicle = "Ambulance"
     spawnVehiclesBrookhaven("Ambulance", 5)
 end})
 
-VehiclesTab:AddButton({"🏎️ 5x Sports Car", function()
+VehiclesTab:AddButton({"🏎️ 5x Sports Car", function(Value)
     selectedVehicle = "SportsCar"
     spawnVehiclesBrookhaven("SportsCar", 5)
 end})
 
-VehiclesTab:AddButton({"🚁 5x Helicopter", function()
+VehiclesTab:AddButton({"🚁 5x Helicopter", function(Value)
     selectedVehicle = "Helicopter"
     spawnVehiclesBrookhaven("Helicopter", 5)
 end})
 
-VehiclesTab:AddButton({"🚙 5x SUV", function()
+VehiclesTab:AddButton({"🚙 5x SUV", function(Value)
     selectedVehicle = "SUV"
     spawnVehiclesBrookhaven("SUV", 5)
 end})
 
 VehiclesTab:AddSection({Name = "Gerenciar Veículos"})
 
-VehiclesTab:AddButton({"🗑️ Deletar Todos os Veículos", function()
+VehiclesTab:AddButton({"🗑️ Deletar Todos os Veículos", function(Value)
     local deletedCount = 0
     
     pcall(function()
@@ -1046,7 +1050,7 @@ VehiclesTab:AddButton({"🗑️ Deletar Todos os Veículos", function()
     })
 end})
 
-VehiclesTab:AddButton({"📍 Trazer Veículos Para Mim", function()
+VehiclesTab:AddButton({"📍 Trazer Veículos Para Mim", function(Value)
     local movedCount = 0
     
     pcall(function()
@@ -1080,16 +1084,17 @@ end})
 
 VehiclesTab:AddSection({Name = "Opções Especiais"})
 
+-- Toggle Auto Repair
 local AutoRepairToggle = VehiclesTab:AddToggle({
     Name = "Auto Reparar Veículo",
     Description = "Repara automaticamente o <font color='rgb(255, 200, 50)'>veículo</font> que você está usando",
     Default = false
 })
 
-AutoRepairToggle:Callback(function(value)
-    autoRepairEnabled = value
+AutoRepairToggle:Callback(function(Value)
+    autoRepairEnabled = Value
     
-    if value then
+    if Value then
         redzlib:MakeNotification({
             Name = "Auto Repair Ativado",
             Content = "Seus veículos serão reparados automaticamente",
@@ -1132,16 +1137,17 @@ AutoRepairToggle:Callback(function(value)
     end
 end)
 
+-- Toggle Velocidade Infinita
 local InfiniteSpeedToggle = VehiclesTab:AddToggle({
     Name = "Velocidade Infinita",
     Description = "Ative <font color='rgb(255, 100, 100)'>velocidade</font> máxima em qualquer veículo",
     Default = false
 })
 
-InfiniteSpeedToggle:Callback(function(value)
-    infiniteSpeedEnabled = value
+InfiniteSpeedToggle:Callback(function(Value)
+    infiniteSpeedEnabled = Value
     
-    if value then
+    if Value then
         redzlib:MakeNotification({
             Name = "Velocidade Infinita Ativada",
             Content = "Seus veículos ficarão super rápidos!",
@@ -1220,7 +1226,7 @@ if not isMobile then
     })
 end
 
-SettingsTab:AddButton({"Fechar Hub", function()
+SettingsTab:AddButton({"Fechar Hub", function(Value)
     if flyEnabled then
         stopFly()
     end
