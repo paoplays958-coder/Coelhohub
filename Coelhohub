@@ -201,15 +201,9 @@ local PrincipalTab = Window:MakeTab({
 
 PrincipalTab:AddSection({Name = "Informações"})
 
-PrincipalTab:AddLabel("Dragon Hub - Versão 0.2")
-PrincipalTab:AddLabel("Brookhaven Edition")
-PrincipalTab:AddLabel("Sistema completo de movimento")
-
-if isMobile then
-    PrincipalTab:AddLabel("📱 Modo Mobile Ativo")
-else
-    PrincipalTab:AddLabel("💻 Modo PC Ativo")
-end
+local InfoParagraph = PrincipalTab:AddParagraph({"Dragon Hub 0.2", "Brookhaven Edition
+Sistema completo de movimento
+" .. (isMobile and "📱 Modo Mobile Ativo" or "💻 Modo PC Ativo")})
 
 PrincipalTab:AddDiscordInvite({
     Name = "Dragon Hub",
@@ -220,9 +214,9 @@ PrincipalTab:AddDiscordInvite({
 
 PrincipalTab:AddSection({Name = "Status do Sistema"})
 
-PrincipalTab:AddLabel("🟢 Todos os sistemas operacionais")
-PrincipalTab:AddLabel("✅ Bypass Brookhaven Ativo")
-PrincipalTab:AddLabel("⚡ Fly, Speed, Jump, Click TP e Veículos")
+local StatusParagraph = PrincipalTab:AddParagraph({"Status", "🟢 Todos os sistemas operacionais
+✅ Bypass Brookhaven Ativo
+⚡ Fly, Speed, Jump, Click TP e Veículos"})
 
 PrincipalTab:AddButton({"🔓 Aplicar Bypass Brookhaven", function(Value)
     disableBrookhavenAntiCheat()
@@ -323,14 +317,14 @@ local FlyTab = Window:MakeTab({
 FlyTab:AddSection({Name = "Sistema de Voo - Brookhaven"})
 
 if isMobile then
-    FlyTab:AddLabel("📱 Use o joystick para mover")
-    FlyTab:AddLabel("Use os botões ⬆️⬇️ para subir/descer")
+    local FlyInfoMobile = FlyTab:AddParagraph({"Controles Mobile", "📱 Use o joystick para mover
+Use os botões ⬆️⬇️ para subir/descer
+⚠️ Fly otimizado para Brookhaven"})
 else
-    FlyTab:AddLabel("💻 Use W/A/S/D para mover")
-    FlyTab:AddLabel("Espaço para subir, Shift para descer")
+    local FlyInfoPC = FlyTab:AddParagraph({"Controles PC", "💻 Use W/A/S/D para mover
+Espaço para subir, Shift para descer
+⚠️ Fly otimizado para Brookhaven"})
 end
-
-FlyTab:AddLabel("⚠️ Fly otimizado para Brookhaven")
 
 local function cleanupFly()
     if flyConnection then
@@ -538,7 +532,6 @@ local function stopFly()
     })
 end
 
--- Toggle Fly
 local FlyToggle = FlyTab:AddToggle({
     Name = "Ativar Fly",
     Description = "Ative o sistema de <font color='rgb(220, 50, 50)'>voo</font> otimizado para Brookhaven",
@@ -553,7 +546,6 @@ FlyToggle:Callback(function(Value)
     end
 end)
 
--- Slider velocidade do Fly
 FlyTab:AddSlider({
     Name = "Velocidade do Fly",
     Min = 10,
@@ -608,9 +600,9 @@ local SpeedTab = Window:MakeTab({
 })
 
 SpeedTab:AddSection({Name = "Sistema de Velocidade"})
-SpeedTab:AddLabel("Configure sua velocidade de corrida")
 
--- Toggle Speed
+local SpeedInfo = SpeedTab:AddParagraph({"Velocidade Customizada", "Configure sua velocidade de corrida"})
+
 local SpeedToggle = SpeedTab:AddToggle({
     Name = "Ativar Speed",
     Description = "Ative a <font color='rgb(100, 200, 255)'>velocidade</font> customizada",
@@ -688,9 +680,9 @@ local JumpTab = Window:MakeTab({
 })
 
 JumpTab:AddSection({Name = "Sistema de Pulo"})
-JumpTab:AddLabel("Configure a força do seu pulo")
 
--- Toggle Jump
+local JumpInfo = JumpTab:AddParagraph({"Pulo Aprimorado", "Configure a força do seu pulo"})
+
 local JumpToggle = JumpTab:AddToggle({
     Name = "Ativar Jump Power",
     Description = "Ative o <font color='rgb(100, 255, 100)'>pulo</font> aprimorado",
@@ -769,12 +761,8 @@ local ClickTPTab = Window:MakeTab({
 
 ClickTPTab:AddSection({Name = "Teleporte por Clique"})
 
-if isMobile then
-    ClickTPTab:AddLabel("📱 Toque na tela onde quer ir")
-else
-    ClickTPTab:AddLabel("💻 Clique onde quer ir")
-end
-ClickTPTab:AddLabel("Equipe a ferramenta primeiro")
+local ClickTPInfo = ClickTPTab:AddParagraph({"Como Usar", (isMobile and "📱 Toque na tela onde quer ir" or "💻 Clique onde quer ir") .. "
+Equipe a ferramenta primeiro"})
 
 ClickTPTab:AddButton({"Ativar Click TP", function(Value)
     if ClickTPTool then
@@ -838,10 +826,9 @@ local VehiclesTab = Window:MakeTab({
 
 VehiclesTab:AddSection({Name = "Sistema de Spawn de Veículos"})
 
-VehiclesTab:AddLabel("Spawne até 10 veículos de uma vez!")
-VehiclesTab:AddLabel("Selecione o veículo e clique em spawnar")
+local VehicleInfo = VehiclesTab:AddParagraph({"Spawn de Veículos", "Spawne até 10 veículos de uma vez!
+Selecione o veículo e clique em spawnar"})
 
--- Lista de veículos disponíveis no Brookhaven
 local vehiclesList = {
     "Sedan",
     "SUV",
@@ -1084,7 +1071,6 @@ end})
 
 VehiclesTab:AddSection({Name = "Opções Especiais"})
 
--- Toggle Auto Repair
 local AutoRepairToggle = VehiclesTab:AddToggle({
     Name = "Auto Reparar Veículo",
     Description = "Repara automaticamente o <font color='rgb(255, 200, 50)'>veículo</font> que você está usando",
@@ -1137,7 +1123,6 @@ AutoRepairToggle:Callback(function(Value)
     end
 end)
 
--- Toggle Velocidade Infinita
 local InfiniteSpeedToggle = VehiclesTab:AddToggle({
     Name = "Velocidade Infinita",
     Description = "Ative <font color='rgb(255, 100, 100)'>velocidade</font> máxima em qualquer veículo",
@@ -1201,17 +1186,15 @@ local SettingsTab = Window:MakeTab({
 
 SettingsTab:AddSection({Name = "Sobre o Hub"})
 
-SettingsTab:AddLabel("Dragon Hub v0.2")
-SettingsTab:AddLabel("Brookhaven Edition")
-SettingsTab:AddLabel(isMobile and "📱 Versão Mobile" or "💻 Versão PC")
-SettingsTab:AddLabel("")
-SettingsTab:AddLabel("Funcionalidades:")
-SettingsTab:AddLabel("• Sistema de Voo Brookhaven")
-SettingsTab:AddLabel("• Bypass Anti-Cheat")
-SettingsTab:AddLabel("• Velocidade Customizada")
-SettingsTab:AddLabel("• Pulo Aprimorado")
-SettingsTab:AddLabel("• Click Teleport")
-SettingsTab:AddLabel("• Sistema de Veículos")
+local AboutInfo = SettingsTab:AddParagraph({"Dragon Hub v0.2", "Brookhaven Edition
+" .. (isMobile and "📱 Versão Mobile" or "💻 Versão PC")})
+
+local FeaturesInfo = SettingsTab:AddParagraph({"Funcionalidades", "• Sistema de Voo Brookhaven
+• Bypass Anti-Cheat
+• Velocidade Customizada
+• Pulo Aprimorado
+• Click Teleport
+• Sistema de Veículos"})
 
 SettingsTab:AddSection({Name = "Controles"})
 
